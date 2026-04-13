@@ -11,15 +11,15 @@ import {
 } from 'react-icons/fi';
 
 const navItems = [
-  { href: '/admin', label: 'Dashboard', icon: <FiGrid /> },
-  { href: '/admin/profile', label: 'Profile', icon: <FiUser /> },
-  { href: '/admin/experience', label: 'Experience', icon: <FiBriefcase /> },
-  { href: '/admin/skills', label: 'Skills', icon: <FiCode /> },
-  { href: '/admin/projects', label: 'Projects', icon: <FiHome /> },
-  { href: '/admin/education', label: 'Education', icon: <FiBookOpen /> },
-  { href: '/admin/contact-links', label: 'Contact Links', icon: <FiLink /> },
-  { href: '/admin/messages', label: 'Messages', icon: <FiMail /> },
-  { href: '/admin/settings', label: 'Settings / Password', icon: <FiSettings /> },
+  { href: '/kishan-dashboard', label: 'Dashboard', icon: <FiGrid /> },
+  { href: '/kishan-dashboard/profile', label: 'Profile', icon: <FiUser /> },
+  { href: '/kishan-dashboard/experience', label: 'Experience', icon: <FiBriefcase /> },
+  { href: '/kishan-dashboard/skills', label: 'Skills', icon: <FiCode /> },
+  { href: '/kishan-dashboard/projects', label: 'Projects', icon: <FiHome /> },
+  { href: '/kishan-dashboard/education', label: 'Education', icon: <FiBookOpen /> },
+  { href: '/kishan-dashboard/contact-links', label: 'Contact Links', icon: <FiLink /> },
+  { href: '/kishan-dashboard/messages', label: 'Messages', icon: <FiMail /> },
+  { href: '/kishan-dashboard/settings', label: 'Settings / Password', icon: <FiSettings /> },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -30,8 +30,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session && pathname !== '/admin/login') {
-        router.replace('/admin/login');
+      if (!session && pathname !== '/kishan-dashboard/login') {
+        router.replace('/kishan-dashboard/login');
       }
       setChecking(false);
     });
@@ -39,10 +39,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    router.replace('/admin/login');
+    router.replace('/kishan-dashboard/login');
   };
 
-  if (pathname === '/admin/login') return <>{children}</>;
+  if (pathname === '/kishan-dashboard/login') return <>{children}</>;
   if (checking) {
     return (
       <div className={styles.loader}>

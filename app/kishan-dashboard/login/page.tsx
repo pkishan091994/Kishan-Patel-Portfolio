@@ -34,7 +34,7 @@ export default function AdminLoginPage() {
       });
       if (error) throw error;
       toast.success('Welcome back, Kishan!');
-      router.replace('/admin');
+      router.replace('/kishan-dashboard');
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Login failed. Check credentials.';
       toast.error(message);

@@ -17,16 +17,15 @@ export default function AdminDashboard() {
         setCounts({ experience: exp.length, skills: skills.length, projects: projects.length, education: edu.length })
     );
   }, []);
-
   const cards = [
-    { href: '/admin/profile', icon: <FiUser />, label: 'Profile', desc: 'Update your bio, photo, and contact info', count: null },
-    { href: '/admin/experience', icon: <FiBriefcase />, label: 'Experience', desc: 'Manage career history', count: counts.experience },
-    { href: '/admin/skills', icon: <FiCode />, label: 'Skills', desc: 'Add or update technical skills', count: counts.skills },
-    { href: '/admin/projects', icon: <FiGrid />, label: 'Projects', desc: 'Showcase your work', count: counts.projects },
-    { href: '/admin/education', icon: <FiBookOpen />, label: 'Education', desc: 'Academic background', count: counts.education },
-    { href: '/admin/contact-links', icon: <FiLink />, label: 'Contact Links', desc: 'Social media & links', count: null },
-    { href: '/admin/messages', icon: <FiMail />, label: 'Messages', desc: 'View contact form submissions', count: null },
-    { href: '/admin/settings', icon: <FiSettings />, label: 'Settings', desc: 'Change admin password', count: null },
+    { href: '/kishan-dashboard/profile', icon: <FiUser />, label: 'Profile', desc: 'Update your bio, photo, and contact info', count: null },
+    { href: '/kishan-dashboard/experience', icon: <FiBriefcase />, label: 'Experience', desc: 'Manage career history', count: counts.experience },
+    { href: '/kishan-dashboard/skills', icon: <FiCode />, label: 'Skills', desc: 'Add or update technical skills', count: counts.skills },
+    { href: '/kishan-dashboard/projects', icon: <FiGrid />, label: 'Projects', desc: 'Showcase your work', count: counts.projects },
+    { href: '/kishan-dashboard/education', icon: <FiBookOpen />, label: 'Education', desc: 'Academic background', count: counts.education },
+    { href: '/kishan-dashboard/contact-links', icon: <FiLink />, label: 'Contact Links', desc: 'Social media & links', count: null },
+    { href: '/kishan-dashboard/messages', icon: <FiMail />, label: 'Messages', desc: 'View contact form submissions', count: null },
+    { href: '/kishan-dashboard/settings', icon: <FiSettings />, label: 'Settings', desc: 'Change admin password', count: null },
   ];
 
   return (
