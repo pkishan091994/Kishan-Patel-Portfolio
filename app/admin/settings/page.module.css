@@ -1,0 +1,171 @@
+.infoCard {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--accent-soft);
+  border: 1px solid rgba(26, 26, 46, 0.12);
+  border-radius: var(--radius-md);
+  margin-bottom: 2rem;
+}
+
+.infoIcon {
+  width: 44px;
+  height: 44px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.infoCard strong {
+  font-size: 0.95rem;
+  display: block;
+  color: var(--text-primary);
+}
+
+.infoCard p {
+  font-size: 0.82rem;
+  color: var(--accent);
+  margin: 0.2rem 0 0;
+}
+
+/* ── Section ─────────────────────────────── */
+.section {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  max-width: 560px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 1.25rem 1.75rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.sectionHeader h2 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.sectionHeader svg {
+  color: var(--accent);
+  font-size: 1rem;
+}
+
+/* ── Form ─────────────────────────────────── */
+.form {
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.inputWrap {
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+.input {
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+}
+
+.eyeBtn {
+  position: absolute;
+  right: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0.25rem;
+  transition: color var(--transition-fast);
+}
+
+.eyeBtn:hover {
+  color: var(--accent);
+}
+
+/* ── Strength Meter ───────────────────────── */
+.strengthWrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.strengthBar {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.strengthSegment {
+  flex: 1;
+  height: 5px;
+  border-radius: 3px;
+  transition: background 0.3s;
+}
+
+.strengthLabel {
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: color 0.3s;
+}
+
+/* ── Rules Checklist ─────────────────────── */
+.rules {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1rem 1.25rem;
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+
+.rule {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  transition: color 0.25s;
+}
+
+.rule.rulePass {
+  color: var(--success);
+}
+
+.ruleIcon {
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  opacity: 0.35;
+  transition: opacity 0.25s;
+}
+
+.rulePass .ruleIcon {
+  opacity: 1;
+}
