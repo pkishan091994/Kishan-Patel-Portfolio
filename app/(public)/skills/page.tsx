@@ -110,7 +110,7 @@ export default function SkillsPage() {
 
   const selectedSkillProgress = selectedSkill?.proficiency ?? 0;
   const selectedSkillProgressOffset = 2 * Math.PI * 54 * (1 - selectedSkillProgress / 100);
-  const selectedSkillIcon = selectedSkill ? resolveSkillIcon(selectedSkill.name) : SiGithub;
+  const SelectedSkillIcon = selectedSkill ? resolveSkillIcon(selectedSkill.name) : SiGithub;
 
   const proficiencyBuckets = {
     advanced: filteredSkills.filter((skill) => getSkillTone(skill.proficiency) === 'advanced').length,
@@ -183,7 +183,7 @@ export default function SkillsPage() {
                     />
                   </svg>
                   <div className={styles.ringCenter}>
-                    <selectedSkillIcon />
+                    <SelectedSkillIcon />
                     <strong>{selectedSkillProgress}%</strong>
                     <span>{getSkillTone(selectedSkillProgress)}</span>
                   </div>
