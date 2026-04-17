@@ -215,3 +215,21 @@ export async function uploadImage(file: File, folder: 'avatars' | 'projects' = '
   const { data } = supabase.storage.from('portfolio').getPublicUrl(fileName);
   return data.publicUrl;
 }
+
+/**
+ * Uploads a document (like a PDF resume) to Supabase Storage.
+ */
+export async function uploadFile(file: File, folder: 'resumes' | 'documents' = 'resumes'): Promise<string> {
+  const ext = file.name.split('.').pop();
+  const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from('portfolio')
+    .upload(fileName, file, { cacheControl: '3600', upsert: false });
+
+  if (uploadError) throw uploadError;
+
+  const { data } = supabase.storage.from('portfolio').getPublicUrl(fileName);
+  return data.publicUrl;
+}
+

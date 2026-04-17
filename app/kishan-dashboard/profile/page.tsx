@@ -1,18 +1,20 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { getProfile, upsertProfile, uploadImage, Profile } from '@/lib/api';
+import { getProfile, upsertProfile, uploadImage, uploadFile, Profile } from '@/lib/api';
 import toast from 'react-hot-toast';
 import styles from '../admin.module.css';
 import profileStyles from './page.module.css';
-import { FiSave, FiUpload, FiUser } from 'react-icons/fi';
+import { FiSave, FiUpload, FiUser, FiFileText } from 'react-icons/fi';
 
 export default function AdminProfilePage() {
   const [form, setForm] = useState<Partial<Profile>>({});
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [uploadingResume, setUploadingResume] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const resumeRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     getProfile().then((p) => {
@@ -56,6 +58,32 @@ export default function AdminProfilePage() {
       toast.error('Supabase storage not configured. Image preview shown locally — set up the "portfolio" bucket to persist uploads.');
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleResumeSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+      toast.error('Please select a PDF file for your resume.');
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('Resume must be under 10 MB.');
+      return;
+    }
+
+    setUploadingResume(true);
+    try {
+      const url = await uploadFile(file, 'resumes');
+      setForm((prev) => ({ ...prev, resume_url: url }));
+      toast.success('Resume uploaded! Click Save Profile to apply.');
+    } catch (err: any) {
+      console.error('Upload Error:', err);
+      toast.error(err.message || 'Supabase storage error. Check if "portfolio" bucket is configured.');
+    } finally {
+      setUploadingResume(false);
     }
   };
 
@@ -170,8 +198,37 @@ export default function AdminProfilePage() {
             <input name="years_experience" type="number" value={form.years_experience || ''} onChange={handleChange} className="form-input" placeholder="8" />
           </div>
           <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-            <label className="form-label">Resume URL</label>
-            <input name="resume_url" value={form.resume_url || ''} onChange={handleChange} className="form-input" placeholder="https://drive.google.com/..." />
+            <label className="form-label">Resume / CV (PDF)</label>
+            <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center', flexWrap: 'wrap' }}>
+              <input
+                ref={resumeRef}
+                type="file"
+                accept="application/pdf"
+                onChange={handleResumeSelect}
+                style={{ display: 'none' }}
+                id="resume-upload"
+              />
+              <label htmlFor="resume-upload" className={`btn btn-primary ${profileStyles.uploadBtn}`}>
+                <FiUpload /> {uploadingResume ? 'Uploading...' : 'Upload Resume PDF'}
+              </label>
+              
+              {form.resume_url && (
+                <a 
+                  href={form.resume_url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="btn btn-ghost"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+                >
+                  <FiFileText /> View Current Resume
+                </a>
+              )}
+            </div>
+            
+            <div style={{ marginTop: '0.75rem' }}>
+              <label className="form-label" style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Or paste direct URL</label>
+              <input name="resume_url" value={form.resume_url || ''} onChange={handleChange} className="form-input" placeholder="https://drive.google.com/..." style={{ marginTop: '0.25rem' }} />
+            </div>
           </div>
           <div className="form-group" style={{ gridColumn: '1 / -1' }}>
             <label className="form-label">Bio</label>
