@@ -13,6 +13,7 @@ export interface Profile {
   location: string;
   resume_url: string;
   years_experience: number;
+  apps_delivered: number;
 }
 
 export interface Experience {

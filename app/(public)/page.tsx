@@ -58,8 +58,8 @@ export default function HomePage() {
   }, [displayed, typing, titleIdx]);
 
   const stats = [
-    { icon: <FiAward />, value: '8+', label: 'Years Experience' },
-    { icon: <FiSmartphone />, value: `${projects.length || '30'}+`, label: 'Apps Delivered' },
+    { icon: <FiAward />, value: `${profile?.years_experience || '8'}+`, label: 'Years Experience' },
+    { icon: <FiSmartphone />, value: `${profile?.apps_delivered || projects.length || '30'}+`, label: 'Apps Delivered' },
     { icon: <FiCode />, value: `${skills.length || '20'}+`, label: 'Technologies' },
   ];
 

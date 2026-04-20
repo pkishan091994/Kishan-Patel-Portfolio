@@ -25,7 +25,11 @@ export default function AdminProfilePage() {
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    let val: string | number = e.target.value;
+    if (e.target.type === 'number' && val !== '') {
+      val = Number(val);
+    }
+    setForm((prev) => ({ ...prev, [e.target.name]: val }));
   };
 
   // ── Image Upload ──────────────────────────────────────────────────
@@ -80,7 +84,6 @@ export default function AdminProfilePage() {
       setForm((prev) => ({ ...prev, resume_url: url }));
       toast.success('Resume uploaded! Click Save Profile to apply.');
     } catch (err: any) {
-      console.error('Upload Error:', err);
       toast.error(err.message || 'Supabase storage error. Check if "portfolio" bucket is configured.');
     } finally {
       setUploadingResume(false);
@@ -93,8 +96,8 @@ export default function AdminProfilePage() {
     try {
       await upsertProfile(form);
       toast.success('Profile saved!');
-    } catch {
-      toast.error('Failed to save profile.');
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to save profile.');
     } finally {
       setLoading(false);
     }
@@ -196,6 +199,10 @@ export default function AdminProfilePage() {
           <div className="form-group">
             <label className="form-label">Years of Experience</label>
             <input name="years_experience" type="number" value={form.years_experience || ''} onChange={handleChange} className="form-input" placeholder="8" />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Apps Delivered</label>
+            <input name="apps_delivered" type="number" value={form.apps_delivered || ''} onChange={handleChange} className="form-input" placeholder="30" />
           </div>
           <div className="form-group" style={{ gridColumn: '1 / -1' }}>
             <label className="form-label">Resume / CV (PDF)</label>
