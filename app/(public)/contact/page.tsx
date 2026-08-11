@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import AnimatedSection from '@/components/AnimatedSection';
+import Loader from '@/components/Loader';
 import { getProfile, getContactLinks, Profile, ContactLink } from '@/lib/api';
 import { supabase } from '@/lib/supabase';
 import styles from './page.module.css';
@@ -12,13 +13,20 @@ import { FiMail, FiPhone, FiMapPin, FiSend, FiLinkedin, FiGithub, FiGlobe } from
 export default function ContactPage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [links, setLinks] = useState<ContactLink[]>([]);
+  const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [sending, setSending] = useState(false);
 
   useEffect(() => {
-    getProfile().then(setProfile);
-    getContactLinks().then(setLinks);
+    Promise.all([getProfile(), getContactLinks()])
+      .then(([p, l]) => {
+        setProfile(p);
+        setLinks(l);
+      })
+      .finally(() => setLoading(false));
   }, []);
+
+  if (loading) return <Loader label="Loading contact" />;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));

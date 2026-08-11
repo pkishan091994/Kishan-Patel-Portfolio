@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import AnimatedSection from '@/components/AnimatedSection';
+import Loader from '@/components/Loader';
 import { getProfile, getSkills, getProjects, Profile, Skill, Project } from '@/lib/api';
 import styles from './page.module.css';
 import { FiArrowRight, FiDownload, FiSmartphone, FiCode, FiAward } from 'react-icons/fi';
@@ -18,6 +19,7 @@ const TITLES = [
 export default function HomePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [titleIdx, setTitleIdx] = useState(0);
@@ -25,16 +27,21 @@ export default function HomePage() {
   const [typing, setTyping] = useState(true);
 
   useEffect(() => {
-    getProfile().then((p) => {
-      setProfile(p);
-      setProfileLoading(false);
-    });
-    getSkills().then(setSkills);
-    getProjects().then((p) => setProjects(p.slice(0, 3)));
+    Promise.all([getProfile(), getSkills(), getProjects()])
+      .then(([p, s, proj]) => {
+        setProfile(p);
+        setSkills(s);
+        setProjects(proj.slice(0, 3));
+      })
+      .finally(() => {
+        setProfileLoading(false);
+        setLoading(false);
+      });
   }, []);
 
   // Typewriter effect
   useEffect(() => {
+    if (loading) return;
     const full = TITLES[titleIdx];
     let i = displayed.length;
 
@@ -55,7 +62,9 @@ export default function HomePage() {
         setTyping(true);
       }
     }
-  }, [displayed, typing, titleIdx]);
+  }, [displayed, typing, titleIdx, loading]);
+
+  if (loading) return <Loader label="Loading portfolio" />;
 
   const stats = [
     { icon: <FiAward />, value: `${profile?.years_experience || '8'}+`, label: 'Years Experience' },

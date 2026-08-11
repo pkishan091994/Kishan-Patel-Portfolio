@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import AnimatedSection from '@/components/AnimatedSection';
+import Loader from '@/components/Loader';
 import { getProfile, getEducation, Profile, Education } from '@/lib/api';
 import styles from './page.module.css';
 import { FiMapPin, FiMail, FiPhone, FiDownload, FiUser, FiBookOpen } from 'react-icons/fi';
@@ -10,15 +11,22 @@ import { FiMapPin, FiMail, FiPhone, FiDownload, FiUser, FiBookOpen } from 'react
 export default function AboutPage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [education, setEducation] = useState<Education[]>([]);
 
   useEffect(() => {
-    getProfile().then((p) => {
-      setProfile(p);
-      setProfileLoading(false);
-    });
-    getEducation().then(setEducation);
+    Promise.all([getProfile(), getEducation()])
+      .then(([p, edu]) => {
+        setProfile(p);
+        setEducation(edu);
+      })
+      .finally(() => {
+        setProfileLoading(false);
+        setLoading(false);
+      });
   }, []);
+
+  if (loading) return <Loader label="Loading about" />;
 
   const name = profile?.name || 'Kishan Patel';
   const title = profile?.title || 'IT Mobile Application Developer';

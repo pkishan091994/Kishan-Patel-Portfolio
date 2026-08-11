@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import AnimatedSection from '@/components/AnimatedSection';
+import Loader from '@/components/Loader';
 import { getProjects, Project } from '@/lib/api';
 import styles from './page.module.css';
 import { FiSmartphone, FiExternalLink, FiGithub } from 'react-icons/fi';
@@ -18,11 +19,16 @@ const DEFAULT_PROJECTS: Project[] = [
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('All');
 
   useEffect(() => {
-    getProjects().then(setProjects);
+    getProjects()
+      .then(setProjects)
+      .finally(() => setLoading(false));
   }, []);
+
+  if (loading) return <Loader label="Loading projects" />;
 
   const projectList = projects.length > 0 ? projects : DEFAULT_PROJECTS;
 

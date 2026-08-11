@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import AnimatedSection from '@/components/AnimatedSection';
+import Loader from '@/components/Loader';
 import { getExperience, Experience } from '@/lib/api';
 import styles from './page.module.css';
 import { FiBriefcase } from 'react-icons/fi';
@@ -15,10 +16,15 @@ const DEFAULT_EXPERIENCE: Experience[] = [
 
 export default function ExperiencePage() {
   const [experience, setExperience] = useState<Experience[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getExperience().then(setExperience);
+    getExperience()
+      .then(setExperience)
+      .finally(() => setLoading(false));
   }, []);
+
+  if (loading) return <Loader label="Loading experience" />;
 
   const expList = experience.length > 0 ? experience : DEFAULT_EXPERIENCE;
 

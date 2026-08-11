@@ -20,6 +20,7 @@ import {
 import { TbApi } from 'react-icons/tb';
 import { IconType } from 'react-icons';
 import AnimatedSection from '@/components/AnimatedSection';
+import Loader from '@/components/Loader';
 import { getSkills, Skill } from '@/lib/api';
 import styles from './page.module.css';
 
@@ -71,11 +72,14 @@ function getSkillTone(proficiency: number): 'advanced' | 'proficient' | 'learnin
 
 export default function SkillsPage() {
   const [skills, setSkills] = useState<Skill[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [selectedSkillId, setSelectedSkillId] = useState<number | null>(null);
 
   useEffect(() => {
-    getSkills().then(setSkills);
+    getSkills()
+      .then(setSkills)
+      .finally(() => setLoading(false));
   }, []);
 
   const skillList = useMemo(() => {
@@ -117,6 +121,8 @@ export default function SkillsPage() {
     proficient: filteredSkills.filter((skill) => getSkillTone(skill.proficiency) === 'proficient').length,
     learning: filteredSkills.filter((skill) => getSkillTone(skill.proficiency) === 'learning').length,
   };
+
+  if (loading) return <Loader label="Loading skills" />;
 
   return (
     <div className={styles.skillsPage}>
