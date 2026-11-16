@@ -5,7 +5,7 @@ import NavigationLoader from '@/components/NavigationLoader';
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <div className="site">
       <Navbar />
       <NavigationLoader />
       <PageTransition>
@@ -14,6 +14,6 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
         </main>
       </PageTransition>
       <Footer />
-    </>
+    </div>
   );
 }

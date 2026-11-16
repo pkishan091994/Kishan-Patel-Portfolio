@@ -3,9 +3,9 @@ import './globals.css';
 import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
-  title: 'Kishan Patel — Mobile Application Developer',
+  title: 'Kishan Patel — Mobile Apps Founders Can Ship and Scale',
   description:
-    'Portfolio of Kishan Patel, an IT Mobile Application Developer with 8+ years of experience in Flutter, iOS, Android, and React Native.',
+    'Portfolio of Kishan Patel, an IT Mobile Application Developer with 9+ years of experience in Flutter, iOS, Android, and React Native.',
   keywords: [
     'Kishan Patel',
     'Mobile Developer',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'Kishan Patel — Mobile Application Developer',
-    description: '8+ years of experience in mobile app development. Specializing in Flutter, iOS, Android, and React Native.',
+    description: '9+ years of experience in mobile app development. Specializing in Flutter, iOS, Android, and React Native.',
     type: 'website',
   },
 };

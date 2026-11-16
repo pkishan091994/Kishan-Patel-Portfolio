@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import styles from './Navbar.module.css';
+import { bookCallHref } from '@/lib/site';
 
 const links = [
   { href: '/', label: 'Home' },
@@ -55,9 +56,9 @@ export default function Navbar() {
         </ul>
 
         {/* Hire Me CTA */}
-        <Link href="/contact" className={`btn btn-primary ${styles.cta}`}>
-          Hire Me
-        </Link>
+        <a href={bookCallHref()} target="_blank" rel="noopener" className={`btn btn-primary ${styles.cta}`}>
+          Book a call
+        </a>
 
         {/* Hamburger */}
         <button
@@ -85,9 +86,9 @@ export default function Navbar() {
             </li>
           ))}
           <li>
-            <Link href="/contact" className="btn btn-primary" style={{ width: '100%', marginTop: '0.5rem' }}>
-              Hire Me
-            </Link>
+            <a href={bookCallHref()} target="_blank" rel="noopener" className="btn btn-primary" style={{ width: '100%', marginTop: '0.5rem' }}>
+              Book a free call
+            </a>
           </li>
         </ul>
       </div>

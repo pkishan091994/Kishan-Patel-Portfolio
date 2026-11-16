@@ -4,174 +4,182 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import AnimatedSection from '@/components/AnimatedSection';
-import Loader from '@/components/Loader';
-import { getProfile, getSkills, getProjects, Profile, Skill, Project } from '@/lib/api';
+import PhoneMockup from '@/components/PhoneMockup';
+import ProjectCard from '@/components/ProjectCard';
+import TechGrid from '@/components/TechGrid';
+import { getProfile, getProjects, Profile, Project } from '@/lib/api';
+import {
+  SITE, SERVICES, PROCESS, TESTIMONIALS, bookCallHref, whatsappHref, findCaseStudy, shortTitle, caseStudyRank,
+} from '@/lib/site';
 import styles from './page.module.css';
-import { FiArrowRight, FiDownload, FiSmartphone, FiCode, FiAward } from 'react-icons/fi';
+import {
+  FiArrowRight, FiCalendar, FiMail, FiCpu, FiGlobe, FiTool, FiZap,
+} from 'react-icons/fi';
+import { FaWhatsapp, FaLinkedinIn } from 'react-icons/fa';
 
-const TITLES = [
-  'Mobile Application Developer',
-  'Flutter Expert',
-  'iOS & Android Developer',
-  'React Native Developer',
-];
+const SERVICE_ICONS: Record<string, React.ReactNode> = {
+  rocket: <FiZap />, tool: <FiTool />, cpu: <FiCpu />, globe: <FiGlobe />,
+};
 
 export default function HomePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [profileLoading, setProfileLoading] = useState(true);
-  const [loading, setLoading] = useState(true);
-  const [skills, setSkills] = useState<Skill[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
-  const [titleIdx, setTitleIdx] = useState(0);
-  const [displayed, setDisplayed] = useState('');
-  const [typing, setTyping] = useState(true);
 
+  // Render immediately; data fills in when Supabase answers (no full-page loader).
   useEffect(() => {
-    Promise.all([getProfile(), getSkills(), getProjects()])
-      .then(([p, s, proj]) => {
-        setProfile(p);
-        setSkills(s);
-        setProjects(proj.slice(0, 3));
-      })
-      .finally(() => {
-        setProfileLoading(false);
-        setLoading(false);
-      });
+    getProfile().then(setProfile).catch(() => {});
+    getProjects().then(setProjects).catch(() => {});
   }, []);
 
-  // Typewriter effect
-  useEffect(() => {
-    if (loading) return;
-    const full = TITLES[titleIdx];
-    let i = displayed.length;
-
-    if (typing) {
-      if (i < full.length) {
-        const t = setTimeout(() => setDisplayed(full.slice(0, i + 1)), 65);
-        return () => clearTimeout(t);
-      } else {
-        const t = setTimeout(() => setTyping(false), 1800);
-        return () => clearTimeout(t);
-      }
-    } else {
-      if (i > 0) {
-        const t = setTimeout(() => setDisplayed(full.slice(0, i - 1)), 38);
-        return () => clearTimeout(t);
-      } else {
-        setTitleIdx((prev) => (prev + 1) % TITLES.length);
-        setTyping(true);
-      }
-    }
-  }, [displayed, typing, titleIdx, loading]);
-
-  if (loading) return <Loader label="Loading portfolio" />;
-
-  const stats = [
-    { icon: <FiAward />, value: `${profile?.years_experience || '8'}+`, label: 'Years Experience' },
-    { icon: <FiSmartphone />, value: `${profile?.apps_delivered || projects.length || '30'}+`, label: 'Apps Delivered' },
-    { icon: <FiCode />, value: `${skills.length || '20'}+`, label: 'Technologies' },
-  ];
-
-  const name = profile?.name || 'Kishan Patel';
-  const bio =
-    profile?.bio ||
-    'Passionate IT Mobile Application Developer with 8+ years of experience crafting high-performance, user-centric mobile applications across Flutter, iOS (Swift), Android (Kotlin/Java), and React Native.';
+  const avatar = profile?.avatar_url || '/kishan-avatar.jpg';
+  const featured = projects.filter((p) => findCaseStudy(p.title)?.featured).sort((a, b) => caseStudyRank(a.title) - caseStudyRank(b.title));
+  const featuredList = (featured.length ? featured : projects).slice(0, 3);
+  const heroApps = projects.slice(0, 3);
+  const call = bookCallHref();
 
   return (
     <div className={styles.page}>
-      {/* ── Hero ───────────────────────────────────────── */}
+      {/* ── Hero ─────────────────────────────────────────── */}
       <section className={styles.hero}>
+        <div className={styles.heroBg} aria-hidden />
         <div className={`container ${styles.heroInner}`}>
           <motion.div
             className={styles.heroContent}
-            initial={{ opacity: 0, y: 32 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
           >
-            <span className={`badge ${styles.heroBadge}`}>
-              🚀 Available for Freelance & Full-time
-            </span>
-
-            <h1 className={styles.heroName}>
-              Hi, I'm <span className={styles.nameAccent}>{name}</span>
-            </h1>
-
-            <div className={styles.typewriterWrap}>
-              <span className={styles.typewriter}>{displayed}</span>
-              <span className={styles.cursor} aria-hidden>|</span>
+            <div className={styles.availability}>
+              <img src={avatar} alt={SITE.name} className={styles.miniAvatar} />
+              <span>
+                <strong>{SITE.name}</strong> · {SITE.role}
+              </span>
+              <span className={styles.dot} aria-hidden />
+              <span className={styles.open}>Available now</span>
             </div>
 
-            <p className={styles.heroBio}>{bio}</p>
+            <h1 className={styles.headline}>
+              I build mobile apps <span className={styles.accentText}>founders can ship and scale.</span>
+            </h1>
 
-            <div className={styles.heroCtas}>
-              <Link href="/projects" className="btn btn-primary">
-                View My Work <FiArrowRight />
+            <p className={styles.stackLine}>
+              {SITE.stackLine.join(' • ')} <span className={styles.sep}>|</span> {SITE.years} yrs{' '}
+              <span className={styles.sep}>|</span> {SITE.apps} apps
+            </p>
+
+            <div className={styles.ctas}>
+              <a href={call} target="_blank" rel="noopener" className="btn btn-primary btn-lg">
+                <FiCalendar /> Book a free call
+              </a>
+              <Link href="/projects" className="btn btn-outline btn-lg">
+                View work <FiArrowRight />
               </Link>
-              {profile?.resume_url && (
-                <a
-                  href={profile.resume_url}
-                  target="_blank"
-                  rel="noopener"
-                  className="btn btn-outline"
-                >
-                  <FiDownload /> Resume
-                </a>
-              )}
-              {!profile?.resume_url && (
-                <Link href="/contact" className="btn btn-outline">
-                  Get In Touch
-                </Link>
-              )}
             </div>
           </motion.div>
 
-          {/* Avatar */}
           <motion.div
-            className={styles.heroAvatar}
-            initial={{ opacity: 0, scale: 0.88 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.55, delay: 0.15, ease: 'easeOut' }}
+            className={styles.heroVisual}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.05, ease: 'easeOut' }}
           >
-            {profileLoading ? (
-              // Shimmer skeleton — shown WHILE fetch is in-flight
-              // prevents old image flashing before new one loads
-              <div className={styles.avatarSkeleton} aria-hidden="true" />
+            {heroApps.length >= 3 ? (
+              <>
+                <div className={styles.phoneBack1}>
+                  <PhoneMockup icon={heroApps[1].image_url} title={shortTitle(heroApps[1].title)} size="sm" />
+                </div>
+                <div className={styles.phoneFront}>
+                  <PhoneMockup
+                    icon={heroApps[0].image_url}
+                    title={shortTitle(heroApps[0].title)}
+                    subtitle={findCaseStudy(heroApps[0].title)?.headline}
+                    size="lg"
+                  />
+                </div>
+                <div className={styles.phoneBack2}>
+                  <PhoneMockup icon={heroApps[2].image_url} title={shortTitle(heroApps[2].title)} size="sm" />
+                </div>
+              </>
             ) : (
-              <img
-                src={profile?.avatar_url || '/kishan-avatar.jpg'}
-                alt={name}
-                className={styles.avatarImg}
-              />
+              <div className={styles.phoneFront}>
+                <PhoneMockup title="Your app" subtitle="Shipped to both stores" size="lg" />
+              </div>
             )}
-            <div className={styles.avatarDeco} />
-            <div className={styles.expBadge}>
-              <strong>8+</strong>
-              <span>Years</span>
-            </div>
           </motion.div>
         </div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          className={styles.scrollIndicator}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-        >
-          <div className={styles.scrollDot} />
-        </motion.div>
+        {/* Trusted by strip */}
+        <div className={`container ${styles.trusted}`}>
+          <span className={styles.trustedLabel}>Apps I&apos;ve shipped for</span>
+          <div className={styles.trustedRow}>
+            {(projects.length ? projects : []).slice(0, 8).map((p) => (
+              <div key={p.id} className={styles.trustedItem} title={p.title}>
+                {p.image_url && <img src={p.image_url} alt="" loading="lazy" />}
+                <span>{shortTitle(p.title)}</span>
+              </div>
+            ))}
+            {!projects.length &&
+              ['iDplus', 'myUpchar', 'DeepVid AI', 'ProNose AI', 'Teethsi', 'WineWise'].map((n) => (
+                <div key={n} className={styles.trustedItem}><span>{n}</span></div>
+              ))}
+          </div>
+        </div>
       </section>
 
-      {/* ── Stats ──────────────────────────────────────── */}
+      {/* ── Stats ─────────────────────────────────────────── */}
+      <section className={styles.statsBand}>
+        <div className={`container ${styles.statsGrid}`}>
+          {[
+            { v: SITE.years, l: 'years building mobile apps' },
+            { v: SITE.apps, l: 'apps shipped to the stores' },
+            { v: 'iOS + Android', l: 'from a single codebase' },
+            { v: 'Fintech · Health · AI', l: 'industries shipped in' },
+          ].map((s) => (
+            <div key={s.l} className={styles.stat}>
+              <strong>{s.v}</strong>
+              <span>{s.l}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Selected work ─────────────────────────────────── */}
       <AnimatedSection>
-        <section className={styles.stats}>
+        <section className="section">
           <div className="container">
-            <div className={styles.statsGrid}>
-              {stats.map((s, i) => (
-                <div key={i} className={styles.statCard}>
-                  <div className={styles.statIcon}>{s.icon}</div>
-                  <strong className={styles.statValue}>{s.value}</strong>
-                  <span className={styles.statLabel}>{s.label}</span>
+            <div className={styles.sectionHead}>
+              <div className="section-title" style={{ marginBottom: 0 }}>
+                <span className="section-label">Selected work</span>
+                <h2>Real apps, real users, live in the stores.</h2>
+              </div>
+              <Link href="/projects" className="btn btn-ghost">
+                All projects <FiArrowRight />
+              </Link>
+            </div>
+            <div className={styles.workList}>
+              {featuredList.map((p) => (
+                <ProjectCard key={p.id} project={p} wide />
+              ))}
+              {!featuredList.length && <div className={styles.skeleton} />}
+            </div>
+          </div>
+        </section>
+      </AnimatedSection>
+
+      {/* ── Services ─────────────────────────────────────── */}
+      <AnimatedSection>
+        <section className={`section ${styles.alt}`}>
+          <div className="container">
+            <div className="section-title">
+              <span className="section-label">Services</span>
+              <h2>How I can help</h2>
+            </div>
+            <div className={styles.services}>
+              {SERVICES.map((s) => (
+                <div key={s.title} className={styles.service}>
+                  <div className={styles.serviceIcon}>{SERVICE_ICONS[s.icon]}</div>
+                  <h3>{s.title}</h3>
+                  <p>{s.text}</p>
                 </div>
               ))}
             </div>
@@ -179,139 +187,93 @@ export default function HomePage() {
         </section>
       </AnimatedSection>
 
-      {/* ── Featured Skills ─────────────────────────────── */}
+      {/* ── Process ───────────────────────────────────────── */}
       <AnimatedSection>
-        <section className={`section ${styles.featuredSection}`}>
+        <section className="section">
           <div className="container">
             <div className="section-title">
-              <span className="section-label">Expertise</span>
-              <h2>Technologies I Work With</h2>
+              <span className="section-label">How I work</span>
+              <h2>Simple, transparent, fast.</h2>
             </div>
-            <div className={styles.skillsGrid}>
-              {(skills.length > 0
-                ? skills.slice(0, 8)
-                : [
-                    { id: 1, name: 'Flutter / Dart', category: 'Cross-Platform', proficiency: 98, order_index: 1 },
-                    { id: 2, name: 'iOS (Swift)', category: 'Native', proficiency: 90, order_index: 2 },
-                    { id: 3, name: 'Android (Kotlin)', category: 'Native', proficiency: 90, order_index: 3 },
-                    { id: 4, name: 'React Native', category: 'Cross-Platform', proficiency: 85, order_index: 4 },
-                    { id: 5, name: 'Firebase', category: 'Backend', proficiency: 88, order_index: 5 },
-                    { id: 6, name: 'REST APIs', category: 'Backend', proficiency: 92, order_index: 6 },
-                    { id: 7, name: 'Git / CI/CD', category: 'DevOps', proficiency: 85, order_index: 7 },
-                    { id: 8, name: 'Supabase', category: 'Backend', proficiency: 80, order_index: 8 },
-                  ]
-              ).map((skill, i) => (
-                <motion.div
-                  key={skill.id}
-                  className={styles.skillChip}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.07 }}
-                  whileHover={{ y: -3 }}
-                >
-                  <span className={styles.skillName}>{skill.name}</span>
-                  <span className={styles.skillCat}>{skill.category}</span>
-                  <div className={styles.skillBar}>
-                    <motion.div
-                      className={styles.skillFill}
-                      initial={{ width: 0 }}
-                      whileInView={{ width: `${skill.proficiency}%` }}
-                      viewport={{ once: true }}
-                      transition={{ delay: i * 0.07 + 0.3, duration: 0.6 }}
-                    />
-                  </div>
-                </motion.div>
+            <ol className={styles.process}>
+              {PROCESS.map((step, i) => (
+                <li key={step.title} className={styles.step}>
+                  <span className={styles.stepNum}>0{i + 1}</span>
+                  <h3>{step.title}</h3>
+                  <p>{step.text}</p>
+                </li>
               ))}
-            </div>
-            <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-              <Link href="/skills" className="btn btn-outline">
-                View All Skills <FiArrowRight />
-              </Link>
-            </div>
+            </ol>
           </div>
         </section>
       </AnimatedSection>
 
-      {/* ── Featured Projects ────────────────────────────── */}
+      {/* ── Tech stack ───────────────────────────────────── */}
       <AnimatedSection>
-        <section className={`section ${styles.featuredSection}`} style={{ background: 'var(--surface)' }}>
+        <section className={`section ${styles.alt}`}>
           <div className="container">
-            <div className="section-title">
-              <span className="section-label">Portfolio</span>
-              <h2>Featured Projects</h2>
-            </div>
-            <div className={styles.projectsGrid}>
-              {(projects.length > 0
-                ? projects
-                : [
-                    {
-                      id: 1, title: 'HealthTrack Pro', description: 'A comprehensive health monitoring app with real-time analytics, wearable integration, and AI-driven insights. Built with Flutter for iOS & Android.', image_url: '', tech_stack: ['Flutter', 'Firebase', 'HealthKit', 'ML Kit'], app_store_url: '#', play_store_url: '#', github_url: '', order_index: 1,
-                    },
-                    {
-                      id: 2, title: 'ShopEase', description: 'Feature-rich e-commerce application with seamless payment gateway integration, AR product preview, and real-time inventory management.', image_url: '', tech_stack: ['React Native', 'Node.js', 'Stripe', 'AWS'], app_store_url: '#', play_store_url: '#', github_url: '', order_index: 2,
-                    },
-                    {
-                      id: 3, title: 'CityComm', description: 'Real-time community communication platform with live video, encrypted messaging, and location-based features.', image_url: '', tech_stack: ['Swift', 'Kotlin', 'WebRTC', 'Socket.io'], app_store_url: '#', play_store_url: '#', github_url: '', order_index: 3,
-                    },
-                  ]
-              ).map((project, i) => (
-                <motion.div
-                  key={project.id}
-                  className={`card ${styles.projectCard}`}
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                >
-                  <div className={styles.projectImg}>
-                    {project.image_url ? (
-                      <img src={project.image_url} alt={project.title} />
-                    ) : (
-                      <div className={styles.projectImgPlaceholder}>
-                        <FiSmartphone size={32} />
-                      </div>
-                    )}
-                  </div>
-                  <div className={styles.projectBody}>
-                    <h3>{project.title}</h3>
-                    <p>{project.description}</p>
-                    <div className={styles.techStack}>
-                      {project.tech_stack?.slice(0, 4).map((t) => (
-                        <span key={t} className="badge">{t}</span>
-                      ))}
-                    </div>
-                    <div className={styles.projectLinks}>
-                      {project.app_store_url && (
-                        <a href={project.app_store_url} className="btn btn-ghost btn-sm" target="_blank" rel="noopener">App Store</a>
-                      )}
-                      {project.play_store_url && (
-                        <a href={project.play_store_url} className="btn btn-ghost btn-sm" target="_blank" rel="noopener">Play Store</a>
-                      )}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-            <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
-              <Link href="/projects" className="btn btn-primary">
-                See All Projects <FiArrowRight />
+            <div className={styles.sectionHead}>
+              <div className="section-title" style={{ marginBottom: 0 }}>
+                <span className="section-label">Stack</span>
+                <h2>Tools I ship with</h2>
+              </div>
+              <Link href="/skills" className="btn btn-ghost">
+                Full stack <FiArrowRight />
               </Link>
             </div>
+            <TechGrid compact />
           </div>
         </section>
       </AnimatedSection>
 
-      {/* ── Call To Action ───────────────────────────────── */}
+      {/* ── Testimonials (only renders when real ones are added in lib/site.ts) ── */}
+      {TESTIMONIALS.length > 0 && (
+        <AnimatedSection>
+          <section className="section">
+            <div className="container">
+              <div className="section-title">
+                <span className="section-label">Testimonials</span>
+                <h2>What clients say</h2>
+              </div>
+              <div className={styles.testimonials}>
+                {TESTIMONIALS.map((t) => (
+                  <figure key={t.name} className={styles.testimonial}>
+                    <blockquote>&ldquo;{t.quote}&rdquo;</blockquote>
+                    <figcaption>
+                      <strong>{t.name}</strong>
+                      <span>{t.role}</span>
+                    </figcaption>
+                  </figure>
+                ))}
+              </div>
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
+
+      {/* ── Contact CTA ───────────────────────────────────── */}
       <AnimatedSection>
-        <section className={styles.ctaSection}>
+        <section className="section" id="contact">
           <div className="container">
             <div className={styles.ctaBox}>
-              <h2>Let's Build Something Great</h2>
-              <p>Have a project in mind? I'd love to hear about it and help bring your vision to life.</p>
+              <div>
+                <span className="section-label">Let&apos;s talk</span>
+                <h2>Have an app idea or a project that&apos;s stuck?</h2>
+                <p>Tell me what you&apos;re building. You&apos;ll get a clear plan and a quote within 24 hours.</p>
+              </div>
               <div className={styles.ctaActions}>
-                <Link href="/contact" className="btn btn-primary">Start a Conversation <FiArrowRight /></Link>
-                <Link href="/experience" className="btn btn-outline">View My Journey</Link>
+                <a href={call} target="_blank" rel="noopener" className="btn btn-primary btn-lg">
+                  <FiCalendar /> Book a free call
+                </a>
+                <a href={whatsappHref()} target="_blank" rel="noopener" className="btn btn-whatsapp btn-lg">
+                  <FaWhatsapp /> WhatsApp
+                </a>
+                <a href={`mailto:${SITE.email}`} className="btn btn-ghost btn-lg">
+                  <FiMail /> {SITE.email}
+                </a>
+                <a href={SITE.linkedin} target="_blank" rel="noopener" className="btn btn-ghost btn-lg">
+                  <FaLinkedinIn /> LinkedIn
+                </a>
               </div>
             </div>
           </div>

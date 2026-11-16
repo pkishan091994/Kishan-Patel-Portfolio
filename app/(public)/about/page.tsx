@@ -73,7 +73,7 @@ export default function AboutPage() {
                   />
                 )}
                 <div className={styles.expBadge}>
-                  <strong>8+</strong>
+                  <strong>9+</strong>
                   <span>Years in IT</span>
                 </div>
               </div>
@@ -123,7 +123,7 @@ export default function AboutPage() {
             </div>
             <div className={styles.highlightsGrid}>
               {[
-                { icon: <FiUser />, title: '8+ Years Experience', desc: 'Deep expertise in mobile app development across Flutter, iOS, Android, and React Native platforms.' },
+                { icon: <FiUser />, title: '9+ Years Experience', desc: 'Deep expertise in mobile app development across Flutter, iOS, Android, and React Native platforms.' },
                 { icon: <FiBookOpen />, title: '30+ Apps Launched', desc: 'Successfully delivered mobile applications across healthcare, e-commerce, fintech, and social sectors.' },
                 { icon: <FiMail />, title: 'Full Lifecycle', desc: 'End-to-end ownership from ideation and architecture through deployment, CI/CD, and ongoing maintenance.' },
                 { icon: <FiPhone />, title: 'Cross-Platform Expert', desc: 'Specializing in building apps that feel native on both iOS and Android while sharing a single codebase.' },

@@ -35,7 +35,7 @@ export default function ExperiencePage() {
         <div className="container">
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <span className="section-label">Career Journey</span>
-            <h1 style={{ marginTop: '0.5rem' }}>8+ Years of Experience</h1>
+            <h1 style={{ marginTop: '0.5rem' }}>9+ Years of Experience</h1>
             <p style={{ maxWidth: 560, marginTop: '0.75rem' }}>
               A timeline of professional growth, impactful projects, and technology expertise across the mobile development landscape.
             </p>

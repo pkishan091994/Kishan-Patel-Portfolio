@@ -1,0 +1,20 @@
+.groups { display: grid; gap: 2.25rem; }
+.groupLabel {
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 0.9rem;
+}
+.flat {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.75rem;
+}
+.tile {
+  display: flex; align-items: center; gap: 0.7rem;
+  padding: 0.85rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 0.88rem; font-weight: 600; color: var(--text-primary);
+  transition: transform var(--transition), border-color var(--transition), background var(--transition);
+}
+.tile:hover { transform: translateY(-2px); border-color: var(--accent-border); background: var(--surface-hover); }

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
 
 /* ── CSS Variables ─────────────────────────────────────────────────────────── */
 :root {
@@ -309,4 +309,82 @@ p  { color: var(--text-secondary); line-height: 1.75; }
 /* ── Responsive ──────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .section { padding: 3.5rem 0; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PUBLIC SITE — dark theme with violet accent (scoped to .site so the admin
+   dashboard keeps its light theme).
+   ══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --surface-2: #efeff5;
+  --accent-2: #3d3d6b;
+  --accent-border: rgba(26, 26, 46, 0.25);
+  --accent-glow: rgba(26, 26, 46, 0.15);
+}
+
+.site {
+  --bg: #08090d;
+  --surface: #101219;
+  --surface-2: #151823;
+  --surface-hover: #1a1d29;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-dark: rgba(255, 255, 255, 0.16);
+  --text-primary: #f4f5f9;
+  --text-secondary: #a6abbb;
+  --text-muted: #6d7386;
+  --accent: #7c5cff;
+  --accent-2: #a78bfa;
+  --accent-mid: #6a48ff;
+  --accent-soft: rgba(124, 92, 255, 0.14);
+  --accent-border: rgba(124, 92, 255, 0.45);
+  --accent-glow: rgba(124, 92, 255, 0.45);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.55);
+
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text-primary);
+}
+html:has(.site) { background: #08090d; color-scheme: dark; }
+
+.site h1, .site h2, .site h3, .site h4 {
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  color: var(--text-primary);
+}
+.site h1 { font-size: clamp(2.2rem, 5.5vw, 3.8rem); letter-spacing: -0.03em; }
+.site h2 { font-size: clamp(1.7rem, 3.8vw, 2.6rem); letter-spacing: -0.025em; }
+.site .section { padding: 6rem 0; }
+.site .section-label { color: var(--accent-2); }
+.site ::selection { background: var(--accent); color: #fff; }
+
+.site .btn { border-radius: 999px; }
+.site .btn-primary {
+  background: var(--accent); border-color: var(--accent); color: #fff;
+  box-shadow: 0 8px 24px -8px var(--accent-glow);
+}
+.site .btn-primary:hover { background: var(--accent-mid); border-color: var(--accent-mid); box-shadow: 0 12px 30px -8px var(--accent-glow); }
+.site .btn-outline { color: var(--text-primary); border-color: var(--border-dark); background: transparent; }
+.site .btn-outline:hover { background: var(--surface-hover); border-color: var(--accent-border); color: var(--text-primary); }
+.site .btn-ghost { background: var(--surface); border-color: var(--border); color: var(--text-primary); }
+.site .btn-ghost:hover { background: var(--surface-hover); border-color: var(--accent-border); }
+.btn-lg { padding: 0.85rem 1.6rem; font-size: 0.98rem; }
+.btn-whatsapp { background: #25d366; border: 2px solid #25d366; color: #06210f; }
+.btn-whatsapp:hover { background: #20bd5a; border-color: #20bd5a; transform: translateY(-1px); }
+
+.site .badge {
+  background: var(--accent-soft); color: var(--accent-2);
+  border: 1px solid rgba(124, 92, 255, 0.25);
+}
+.site .card { background: var(--surface); border-color: var(--border); }
+.site .card:hover { border-color: var(--accent-border); }
+.site .form-input { background: var(--surface-2); border-color: var(--border); color: var(--text-primary); }
+.site .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.site ::-webkit-scrollbar-track { background: var(--bg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .site *, .site *::before, .site *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+@media (max-width: 768px) {
+  .site .section { padding: 4rem 0; }
 }

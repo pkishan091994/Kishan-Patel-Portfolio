@@ -8,7 +8,9 @@ import { getProfile, getContactLinks, Profile, ContactLink } from '@/lib/api';
 import { supabase } from '@/lib/supabase';
 import styles from './page.module.css';
 import toast from 'react-hot-toast';
-import { FiMail, FiPhone, FiMapPin, FiSend, FiLinkedin, FiGithub, FiGlobe } from 'react-icons/fi';
+import { FiMail, FiPhone, FiMapPin, FiSend, FiLinkedin, FiGithub, FiGlobe, FiCalendar } from 'react-icons/fi';
+import { FaWhatsapp } from 'react-icons/fa';
+import { SITE, bookCallHref, whatsappHref } from '@/lib/site';
 
 export default function ContactPage() {
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -66,10 +68,15 @@ export default function ContactPage() {
         <div className="container">
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <span className="section-label">Get In Touch</span>
-            <h1 style={{ marginTop: '0.5rem' }}>Let's Work Together</h1>
-            <p style={{ maxWidth: 500, marginTop: '0.75rem' }}>
-              Have a project idea or a role that might be a great fit? I'd love to hear from you.
+            <h1 style={{ marginTop: '0.5rem' }}>Let&apos;s build your app.</h1>
+            <p style={{ maxWidth: 520, marginTop: '0.75rem' }}>
+              The fastest way to start is a free 20-minute call. Prefer chat? WhatsApp or email works too — I reply within 24 hours.
             </p>
+            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginTop: '1.75rem' }}>
+              <a href={bookCallHref()} target="_blank" rel="noopener" className="btn btn-primary btn-lg"><FiCalendar /> Book a free call</a>
+              <a href={whatsappHref()} target="_blank" rel="noopener" className="btn btn-whatsapp btn-lg"><FaWhatsapp /> WhatsApp</a>
+              <a href={`mailto:${SITE.email}`} className="btn btn-ghost btn-lg"><FiMail /> Email</a>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -85,8 +92,8 @@ export default function ContactPage() {
 
                 <div className={styles.contactItems}>
                   {[
-                    { icon: <FiMail />, label: 'Email', value: profile?.email || 'kishanpatel@email.com' },
-                    { icon: <FiPhone />, label: 'Phone', value: profile?.phone || '+91 98765 43210' },
+                    { icon: <FiMail />, label: 'Email', value: profile?.email || SITE.email },
+                    { icon: <FiPhone />, label: 'Phone', value: profile?.phone || SITE.phone },
                     { icon: <FiMapPin />, label: 'Location', value: profile?.location || 'Gujarat, India' },
                   ].map((item, i) => (
                     <div key={i} className={styles.contactItem}>
@@ -123,7 +130,7 @@ export default function ContactPage() {
 
                 <div className={styles.availability}>
                   <div className={styles.availableDot} />
-                  <span>Available for new opportunities</span>
+                  <span>Available for new projects — Gulf, US &amp; worldwide</span>
                 </div>
               </div>
             </AnimatedSection>

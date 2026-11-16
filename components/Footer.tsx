@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import styles from './Footer.module.css';
-import { FiGithub, FiLinkedin, FiMail } from 'react-icons/fi';
+import { FiLinkedin, FiMail } from 'react-icons/fi';
+import { FaWhatsapp } from 'react-icons/fa';
+import { SITE, whatsappHref } from '@/lib/site';
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -12,7 +14,7 @@ export default function Footer() {
             <span className={styles.logoMark}>KP</span>
             <span>Kishan Patel</span>
           </Link>
-          <p className={styles.tagline}>Mobile Application Developer · 8+ Years</p>
+          <p className={styles.tagline}>Mobile apps founders can ship and scale · {SITE.years} yrs · {SITE.apps} apps</p>
         </div>
 
         <nav className={styles.links}>
@@ -23,9 +25,9 @@ export default function Footer() {
         </nav>
 
         <div className={styles.social}>
-          <a href="mailto:kishanpatel@email.com" aria-label="Email"><FiMail /></a>
-          <a href="https://linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><FiLinkedin /></a>
-          <a href="https://github.com" target="_blank" rel="noopener" aria-label="GitHub"><FiGithub /></a>
+          <a href={`mailto:${SITE.email}`} aria-label="Email"><FiMail /></a>
+          <a href={SITE.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn"><FiLinkedin /></a>
+          <a href={whatsappHref()} target="_blank" rel="noopener" aria-label="WhatsApp"><FaWhatsapp /></a>
         </div>
       </div>
 
